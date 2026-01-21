@@ -25,7 +25,7 @@ function writeFile(combat) {
 
 let combat = readFile() || {
   turn: 0,
-  participants: []
+  participants: [],
 };
 
 app.get("/combat", (req, res) => {
@@ -33,8 +33,8 @@ app.get("/combat", (req, res) => {
 });
 
 app.post("/combat/add", (req, res) => {
-  const { name, initiative } = req.body;
-  combat.participants.push({ name, initiative });
+  const { name, initiative, health, mana } = req.body;
+  combat.participants.push({ name, initiative, health, mana });
   console.log('Recebido informações do jogador!', combat)
   combat.participants.sort((a, b) => b.initiative - a.initiative);
   writeFile(combat);
