@@ -19,7 +19,7 @@ async function atualizar() {
     const btnDelete = document.createElement("button");
     btnDelete.textContent = "❌";
     btnDelete.onclick = () => {
-      deletar();
+      deletar( p );
     };
 
     const name = document.createElement("span");
@@ -28,11 +28,11 @@ async function atualizar() {
 
     const btnMinusHealth = document.createElement("button");
     btnMinusHealth.textContent = "-";
-    btnMinusHealth.onclick = () => changeStatus(true, p.health, 1, p.name);
+    btnMinusHealth.onclick = () => changeStatus(true, p.health, p.name);
 
     const btnPlusHealth = document.createElement("button");
     btnPlusHealth.textContent = "+";
-    btnPlusHealth.onclick = () => changeStatus(false, p.health, 1, p.name);
+    btnPlusHealth.onclick = () => changeStatus(false, p.health, p.name);
 
     const hp = document.createElement("span");
     hp.textContent = `HP: ${p.health}`;
@@ -42,11 +42,11 @@ async function atualizar() {
 
     const btnMinusMana = document.createElement("button");
     btnMinusMana.textContent = "-";
-    btnMinusMana.onclick = () => changeStatus(true, p.mana, 1, p.name);
+    btnMinusMana.onclick = () => changeStatus(true, p.mana, p.name);
 
     const btnPlusMana = document.createElement("button");
     btnPlusMana.textContent = "+";
-    btnPlusMana.onclick = () => changeStatus(false, p.mana, 1, p.name);
+    btnPlusMana.onclick = () => changeStatus(false, p.mana, p.name);
 
     li.appendChild(name);
     li.appendChild(hp);
@@ -75,7 +75,8 @@ async function adicionar() {
   atualizar();
 }
 
-function changeStatus(isDamage = true, status, value, name) {
+function changeStatus(isDamage = true, status, name) {
+  let value = Number( prompt( "Qual valor será " + (isDamage ? "subtraído?" : "adicionado?"), ) );  
   status += isDamage ? -value : value;
   updateHealth(name, status);
 }
@@ -92,8 +93,8 @@ async function updateHealth(name, newStatus) {
   atualizar();
 }
 
-async function deletar() {
-  const name = document.getElementById("nome").value;
+async function deletar( p ) {
+  const name = p.name
 
   await fetch(API.delete, {
     method: "DELETE",
