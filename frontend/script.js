@@ -4,6 +4,7 @@ const API = {
   next: "/combat/next",
   delete: "/combat",
   updateHealth: "/combat/update/health",
+  updateMana: "/combat/update/mana",
 }
 
 async function atualizar() {
@@ -28,11 +29,11 @@ async function atualizar() {
 
     const btnMinusHealth = document.createElement("button");
     btnMinusHealth.textContent = "-";
-    btnMinusHealth.onclick = () => changeStatus(true, p.health, p.name);
+    btnMinusHealth.onclick = () => changeStatus(true, p.health, p.name, true);
 
     const btnPlusHealth = document.createElement("button");
     btnPlusHealth.textContent = "+";
-    btnPlusHealth.onclick = () => changeStatus(false, p.health, p.name);
+    btnPlusHealth.onclick = () => changeStatus(false, p.health, p.name, true);
 
     const hp = document.createElement("span");
     hp.textContent = `HP: ${p.health}`;
@@ -42,11 +43,11 @@ async function atualizar() {
 
     const btnMinusMana = document.createElement("button");
     btnMinusMana.textContent = "-";
-    btnMinusMana.onclick = () => changeStatus(true, p.mana, p.name);
+    btnMinusMana.onclick = () => changeStatus(true, p.mana, p.name, false);
 
     const btnPlusMana = document.createElement("button");
     btnPlusMana.textContent = "+";
-    btnPlusMana.onclick = () => changeStatus(false, p.mana, p.name);
+    btnPlusMana.onclick = () => changeStatus(false, p.mana, p.name, false);
 
     li.appendChild(name);
     li.appendChild(hp);
@@ -75,19 +76,17 @@ async function adicionar() {
   atualizar();
 }
 
-function changeStatus(isDamage = true, status, name) {
+function changeStatus(isDamage = true, status, name, isHealth = true) {
   let value = Number( prompt( "Qual valor será " + (isDamage ? "subtraído?" : "adicionado?"), ) );  
   status += isDamage ? -value : value;
-  updateHealth(name, status);
+  updateStatus(name, status, isHealth);
 }
 
-async function updateHealth(name, newStatus) {
-
-  const newHealth = newStatus;
-  await fetch(API.updateHealth, {
+async function updateStatus(name, newStatus, isHealth) {
+  await fetch( (isHealth ? API.updateHealth : API.updateMana), {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, newHealth }),
+    body: JSON.stringify({ name, newStatus }),
   });
 
   atualizar();
